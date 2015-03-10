@@ -91,7 +91,7 @@ do
     p = p * 3 / 40
     -- has floats? divide by 10
     if 1/2 ~= 0 then
-      t, p = 0.1 * t, 0.1 * p
+      t, p = t / 10, p / 10
     end
     --
     return t, p

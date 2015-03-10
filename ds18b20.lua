@@ -56,7 +56,7 @@ do
           -- NB: temperature in Celsius * 10^4
           t = t * 625
           -- floats exist?
-          if 1/2 ~= 0 then t = 0.0001 * t end
+          if 1/2 ~= 0 then t = t / 10000 end
           -- NB: due 850000 means bad pullup. ignore
           if t ~= 850000 then
             r[format_addr(d[i])] = t

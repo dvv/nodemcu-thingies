@@ -76,7 +76,7 @@ do
     end
     -- has floats? divide by 10
     if 1/2 ~= 0 then
-      t, h = 0.1 * t, 0.1 * h
+      t, h = t / 10, h / 10
     end
     --
     return t, h
