@@ -37,12 +37,23 @@ do
     _row, _col = 0, 0
     w(0x02, 0)
   end
+  local set_backlight = function(on)
+    _ctl = on and 0x08 or 0x00
+    w(0x00, 0)
+  end
+  local create_char = function(c, bytes)
+    w(0x40 + bshl(band(c, 0x07), 3), 0)
+    for i = 1, 8 do
+      w(bytes[i], 1)
+    end
+  end
   -- NB: 0-based
   local _row, _col = 0, 0
   local goto = function(row, col)
     row = row % _ROWS
-    if col < 0 then col = 0 end
-    if col >= _COLS then col = _COLS - 1 end
+    col = col % _COLS
+    --if col < 0 then col = 0 end
+    --if col >= _COLS then col = _COLS - 1 end
     _row, _col = row, col
     w(bor(0x80, _LINES[row] + col), 0)
   end
@@ -60,12 +71,13 @@ do
       -- \r
       elseif c == 13 then
         goto(_row, 0)
-      -- \e \005
-      elseif c == 5 then
+      -- \011
+      elseif c == 11 then
         -- clear up to the eol
         clear_to_eol()
-      -- \b \002
-      elseif c == 2 then
+        goto(_row, _col)
+      -- \012
+      elseif c == 12 then
         -- clear all
         clear()
       else
@@ -76,6 +88,18 @@ do
         end
       end
     end
+  end
+  local cursor_left = function()
+    w(0x10, 0)
+  end
+  local cursor_right = function()
+    w(0x14, 0)
+  end
+  local shift_left = function()
+    w(0x18, 0)
+  end
+  local shift_right = function()
+    w(0x1C, 0)
   end
   local init = function(adr, rows)
     ADR = adr or 0x27
@@ -94,7 +118,13 @@ do
       home = home,
       goto = goto,
       print = puts,
-      _w = _w, -- raw writer
+      create_char = create_char,
+      set_backlight = set_backlight,
+      cursor_left = cursor_left,
+      cursor_right = cursor_right,
+      shift_left = shift_left,
+      shift_right = shift_right,
+      _w = w, -- raw writer
     }
   end
   -- expose constructor
