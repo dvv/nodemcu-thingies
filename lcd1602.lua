@@ -12,6 +12,7 @@
 -- lcd = dofile("lcd1602.lua")()
 -- lcd.put(lcd.locate(0, 5), "Hello, dvv!")
 -- lcd.run(0, "It's time! Skushai tvorojok!", 150, 1, function() print("done") end); print("ok")
+-- function notice() print(node.heap()); lcd.run(0, "Should not leak!", 50, 1, notice) end; notice()
 ------------------------------------------------------------------------------
 local M
 do
@@ -64,31 +65,22 @@ do
       end
     end
   end
-  -- show a running string s at row. shift delay is _delay
-  --   for non-blocking version use _timer, on completion spawn callback
-  local run = function(row, s, _delay, _timer, callback)
+  -- show a running string s at row. shift delay is _delay using timer, on completion spawn callback
+  local run = function(row, s, _delay, timer, callback)
     _delay = _delay or 40
-    -- sync version
-    if not _timer then
-      _delay = _delay * 1000
+    tmr.stop(timer)
+    local i = 16
+    local runner = function()
       -- TODO: optimize calculus?
-      for i = 16, -#s, -1 do
-        put(locate(row, i >= 0 and i or 0), (i >= 0 and s:sub(1, 16 - i) or s:sub(1 - i, 16 - i)), " ")
-        tmr.wdclr()
-        delay(_delay)
-      end
-    -- async version
-    else
-      local i = 16
-      tmr.alarm(_timer, _delay, 1, function()
-        put(locate(row, i >= 0 and i or 0), (i >= 0 and s:sub(1, 16 - i) or s:sub(1 - i, 16 - i)), " ")
-        if i == -#s then
-          tmr.stop(_timer)
-          if type(callback) == "function" then callback() end
-        end
+      put(locate(row, i >= 0 and i or 0), (i >= 0 and s:sub(1, 16 - i) or s:sub(1 - i, 16 - i)), " ")
+      if i == -#s then
+        tmr.stop(timer)
+        if type(callback) == "function" then callback() end
+      else
         i = i - 1
-      end)
+      end
     end
+    tmr.alarm(timer, _delay, 1, runner)
   end
   -- start lcd
   local init = function(rows, adr)
