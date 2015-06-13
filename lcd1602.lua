@@ -36,6 +36,9 @@ do
     _ctl = on and 0x08 or 0x00
     w(0x00, 0)
   end
+  local clear = function()
+    w(0x01, 0)
+  end
   -- return command to set cursor at row/col
   local locate = function(row, col)
     return 0x80 + col + (row % 2) * 0x40
@@ -99,6 +102,7 @@ do
     return {
       define_char = define_char,
       light = light,
+      clear = clear,
       locate = locate,
       put = put,
       run = run,

@@ -34,7 +34,7 @@ do
     return self:command("publish", chn, s)
   end
   local subscribe = function(self, chn, handler)
-    if self:command("subscribe", chn) then
+    if self:command("psubscribe", chn) then
       -- NB: overwrite handler or leave old one
       if handler then self.handler = handler end
     end
@@ -68,10 +68,12 @@ do
       --print("-FD")
     end)
     _fd:on("receive", function(fd, s)
-      print("IN", s)
+      --print("IN", s)
       -- pubsub?
-      local ok, _, chnn, chn, msgn, msg = s:find("^*3\r\n%$7\r\nmessage\r\n%$(%d-)\r\n(.-)\r\n%$(%d-)\r\n(.-)\r\n")
+      --local ok, _, chnn, chn, msgn, msg = s:find("^*3\r\n%$7\r\nmessage\r\n%$(%d-)\r\n(.-)\r\n%$(%d-)\r\n(.-)\r\n")
+      local ok, _, chnn, chn, msgn, msg = s:find("^*4\r\n%$8\r\npmessage\r\n%$%d-\r\n.-\r\n%$(%d-)\r\n(.-)\r\n%$(%d-)\r\n(.-)\r\n")
       if ok then
+        --print("MATCHED", chn, msg)
         if #chn == tonumber(chnn)
            and #msg == tonumber(msgn)
            and self.handler
