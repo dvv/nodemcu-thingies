@@ -6,7 +6,7 @@
 --
 -- Example:
 -- local redis = dofile("redis.lua").connect(host, port)
--- redis:publish("chan1", foo")
+-- redis:publish("chan1", "foo")
 -- redis:subscribe("chan1", function(self, channel, msg) print(channel, msg) end)
 ------------------------------------------------------------------------------
 local M

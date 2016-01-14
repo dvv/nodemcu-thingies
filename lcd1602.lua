@@ -40,8 +40,10 @@ do
     w(0x01, 0)
   end
   -- return command to set cursor at row/col
+  local _offsets = { [0] = 0x80, 0xC0, 0x94, 0xD4 } -- 20x4
+  -- local _offsets = { [0] = 0x80, 0xC0, 0x90, 0xD0 } -- 16x4
   local locate = function(row, col)
-    return 0x80 + col + (row % 2) * 0x40
+    return col + _offsets[row]
   end
   local define_char = function(index, bytes)
     w(0x40 + 8 * band(index, 0x07), 0)

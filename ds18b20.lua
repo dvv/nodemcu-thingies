@@ -11,7 +11,7 @@ local M
 do
   local bit = bit
   local format_addr = function(a)
-    return ("%02x-%02x%02x%02x%02x%02x%02x"):format(
+    return ("%02X-%02X%02X%02X%02X%02X%02X"):format(
         a:byte(1),
         a:byte(7), a:byte(6), a:byte(5),
         a:byte(4), a:byte(3), a:byte(2)
