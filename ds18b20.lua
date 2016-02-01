@@ -38,7 +38,7 @@ do
     ow.skip(pin)
     ow.write(pin, 0x44, 1)
     -- wait a bit
-    tmr.alarm(0, delay or 100, 0, function()
+    tmr.alarm(0, delay or 200, 0, function()
       -- iterate over devices
       local r = { }
       for i = 1, #d do
