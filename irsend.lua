@@ -33,8 +33,6 @@ do
       c = c + 0
       c = c + 0
       c = c + 0
-      c = c + 0
-      c = c + 0
       c = c * 1
       c = c * 1
       c = c * 1
@@ -59,14 +57,14 @@ do
     waitus(NEC_HDR_SPACE)
     -- sequence, lsb first
     -- NB: NEC protocol is least bit first
-    for i = 0, 31 do
+    for i = 31, 0, -1 do
       pulse(pin, NEC_BIT_MARK)
       waitus(isset(code, i) and NEC_ONE_SPACE or NEC_ZERO_SPACE)
     end
     -- trailer
     pulse(pin, NEC_BIT_MARK)
     -- done transmitter
-    --mode(pin, 0, tsop and 1 or 0)
+    mode(pin, 0, tsop and 1 or 0)
   end
   -- expose
   M = {
