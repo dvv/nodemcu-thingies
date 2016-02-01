@@ -33,7 +33,8 @@ do
     waitus(10)
     gpio.mode(pin, gpio.OUTPUT)
     gpio.write(pin, 0)
-    waitus(20000)
+    -- NB: may cause wifi glitches
+    for i = 1, 20 do waitus(1000) end
     gpio.write(pin, 1)
     gpio.mode(pin, gpio.INPUT, gpio.PULLUP)
     -- wait for device presense
