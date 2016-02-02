@@ -55,8 +55,7 @@ do
     -- header
     pulse(pin, NEC_HDR_MARK)
     waitus(NEC_HDR_SPACE)
-    -- sequence, lsb first
-    -- NB: NEC protocol is least bit first
+    -- sequence
     for i = 31, 0, -1 do
       pulse(pin, NEC_BIT_MARK)
       waitus(isset(code, i) and NEC_ONE_SPACE or NEC_ZERO_SPACE)
