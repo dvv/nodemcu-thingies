@@ -21,6 +21,8 @@ do
     local ow = require("ow")
     -- get list of relevant devices
     local d = { }
+    -- NB: lock the bus. TODO: mutex
+    oneWireBusLocked = true
     ow.setup(pin)
     ow.reset_search(pin)
     while true do
@@ -37,8 +39,12 @@ do
     ow.reset(pin)
     ow.skip(pin)
     ow.write(pin, 0x44, 1)
+    -- unlock the bus
+    oneWireBusLocked = false
     -- wait a bit
-    tmr.alarm(0, delay or 200, 0, function()
+    tmr.alarm(0, delay or 100, 0, function()
+      -- NB: lock the bus. TODO: mutex
+      oneWireBusLocked = true
       -- iterate over devices
       local r = { }
       for i = 1, #d do
@@ -64,6 +70,8 @@ do
           d[i] = nil
         end
       end
+      -- unlock the bus
+      oneWireBusLocked = false
       cb(r)
     end)
   end

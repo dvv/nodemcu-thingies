@@ -65,9 +65,29 @@ do
     -- done transmitter
     mode(pin, 0, tsop and 1 or 0)
   end
+  local nec2 = function(pin, code)
+    -- header
+    mode(pin, 1)
+    waitus(NEC_HDR_MARK)
+    mode(pin, 0)
+    waitus(NEC_HDR_SPACE)
+    -- sequence
+    for i = 31, 0, -1 do
+      mode(pin, 1)
+      waitus(NEC_BIT_MARK)
+      mode(pin, 0)
+      waitus(isset(code, i) and NEC_ONE_SPACE or NEC_ZERO_SPACE)
+    end
+    -- trailer
+    mode(pin, 1)
+    waitus(NEC_BIT_MARK)
+    mode(pin, 0)
+    waitus(NEC_HDR_SPACE)
+  end
   -- expose
   M = {
     nec = nec,
+    nec2 = nec2,
   }
 end
 return M

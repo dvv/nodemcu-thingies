@@ -6,7 +6,8 @@
 -- Heavily based on work of Christee <Christee@nodemcu.com>
 --
 -- Example:
--- print(dofile("bmp085.lua").read(sda, scl))
+-- i2c.setup(0, sda, scl, i2c.SLOW)
+-- print(dofile("bmp085.lua").read())
 ------------------------------------------------------------------------------
 local M
 do
@@ -42,8 +43,7 @@ do
   -- calibration data
   local AC1, AC2, AC3, AC4, AC5, AC6, B1, B2, MC, MD
   -- read
-  local read = function(sda, scl, oss)
-    i2c.setup(0, sda, scl, i2c.SLOW)
+  local read = function(oss)
     -- cache calibration data
     if not AC1 then
       AC1 = r16(0xAA)
@@ -57,6 +57,7 @@ do
       MC  = r16(0xBC)
       MD  = r16(0xBE)
     end
+    -- print(AC1, AC2, AC3, AC4, AC5, AC6, B1, B2, MC, MD)
     if not oss then oss = 0 end
     if oss <= 0 then oss = 0 end
     if oss > 3 then oss = 3 end
