@@ -17,10 +17,13 @@ local _meta = {
 
   -- send data
   send = function(self, s)
-    -- just push to output queue tail
+    -- push to output queue tail
     self.queue[#self.queue + 1] = s
-    -- and initiate sending helper
-    self:_send()
+    -- and initiate sending helper unless it is locked
+    if not self.sending then
+      self.sending = true
+      self:_send()
+    end
   end,
 
   -- sending helper for draining output queue
@@ -29,23 +32,20 @@ local _meta = {
     if #self.queue > 0 then
       -- socket ready?
       if self.fd and not self.connecting then
-        -- TODO: FIXME: without a delay broken data is sent (first char eaten?)
-        tmr.delay(10000)
         -- gently send from queue head
+        -- NB: queue head will be removed in sent callback
         -- TODO: chunking?
         local ok, err = pcall(self.fd.send, self.fd, self.queue[1])
         -- send failed?
         if not ok then
           -- report error
           self:emit("error", err)
-        -- sent ok
-        else
-          -- remove queue head
-          table.remove(self.queue, 1)
         end
       end
     -- queue empty
     else
+      -- unlock sender
+      self.sending = false
       -- report queue drained
       self:emit("drain")
     end
@@ -70,6 +70,8 @@ local _meta = {
       end)
       -- on data sent restart sending helper
       fd:on("sent", function(fd)
+        -- remove queue head
+        table.remove(self.queue, 1)
         self:_send()
       end)
       -- report connected ok

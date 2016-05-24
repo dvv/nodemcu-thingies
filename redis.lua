@@ -14,13 +14,15 @@
 
 redis = { }
 
+require("net2")
+
 local formatCommand = function(...)
   local arg = { ... }
   local t = {
     ("*%d\r\n"):format(#arg)
   }
   for i = 1, #arg do
-    local a = arg[i]
+    local a = tostring(arg[i])
     t[#t + 1] = ("$%d\r\n%s\r\n"):format(#a, a)
   end
   return table.concat(t)
@@ -38,7 +40,7 @@ local parseMessage = function(s)
 end
 
 function redis:new(host, port)
-  local self = net2.connect(host, port or 6379)
+  local self = net2:tcp(host, port or 6379)
   self:on("data", function(self, data)
     self:emit("message", parseMessage(data))
   end)
@@ -46,5 +48,6 @@ function redis:new(host, port)
     -- TODO: response parser
     self:send(formatCommand(...))
   end
+  self:connect(host, port or 6379)
   return self
 end
