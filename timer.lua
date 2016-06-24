@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 -- Timer helpers
 --
--- LICENCE: http://opensource.org/licenses/MIT
+-- LICENSE: http://opensource.org/licenses/MIT
 -- Vladimir Dronnikov <dronnikov@gmail.com>
 --
 -- NB: occupies physical tmr #0

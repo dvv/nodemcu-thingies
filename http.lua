@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 -- HTTP server module
 --
--- LICENCE: http://opensource.org/licenses/MIT
+-- LICENSE: http://opensource.org/licenses/MIT
 -- Vladimir Dronnikov <dronnikov@gmail.com>
 ------------------------------------------------------------------------------
 local collectgarbage, tonumber, tostring = collectgarbage, tonumber, tostring

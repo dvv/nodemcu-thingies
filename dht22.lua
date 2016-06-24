@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 -- DHT11/22 query module
 --
--- LICENCE: http://opensource.org/licenses/MIT
+-- LICENSE: http://opensource.org/licenses/MIT
 -- Vladimir Dronnikov <dronnikov@gmail.com>
 --
 -- Example:

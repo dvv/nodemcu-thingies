@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 -- CoAP poorman module
 --
--- LICENCE: http://opensource.org/licenses/MIT
+-- LICENSE: http://opensource.org/licenses/MIT
 -- Vladimir Dronnikov <dronnikov@gmail.com>
 --
 -- NB: depend on struct module
